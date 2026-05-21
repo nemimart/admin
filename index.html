@@ -6,7 +6,6 @@
     <title>NEMI MASTER v10 | PRO BUSINESS SUITE</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* [TERE SARE PURANE STYLES YAHAN HAIN - UNTOUCHED] */
         :root {
             --primary: #4f46e5;
             --secondary: #f43f5e;
@@ -15,7 +14,6 @@
             --bg: #f8fafc;
             --text-muted: #64748b;
         }
-
         * { box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); margin: 0; padding-bottom: 100px; color: var(--dark); overflow-x: hidden; }
 
@@ -35,6 +33,68 @@
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
+        /* ============================================================
+           OTP OVERLAY - TELEGRAM VERIFICATION SYSTEM
+           ============================================================ */
+        #otpOverlay {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.97);
+            backdrop-filter: blur(10px);
+            z-index: 99999;
+            display: flex;
+            align-items: center; justify-content: center;
+            flex-direction: column; padding: 20px;
+        }
+        .otp-card {
+            background: white; border-radius: 32px; padding: 40px 30px;
+            max-width: 440px; width: 100%; text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            border: 2px solid var(--primary);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .otp-icon-circle {
+            width: 75px; height: 75px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--dark), #1e293b);
+            display: inline-flex; align-items: center; justify-content: center;
+            border: 3px solid var(--primary); margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(79,70,229,0.3);
+        }
+        .otp-icon-circle i { font-size: 32px; color: var(--primary); }
+        .otp-card h2 { margin: 0 0 6px 0; font-size: 24px; font-weight: 800; color: var(--dark); }
+        .otp-card .subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
+        .otp-input-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 25px; }
+        .otp-box {
+            width: 60px; height: 70px; border-radius: 16px;
+            border: 2px solid #e2e8f0; background: #f8fafc;
+            text-align: center; font-size: 30px; font-weight: 800;
+            color: var(--dark); font-family: 'Courier New', monospace;
+            outline: none; transition: all 0.3s;
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+        }
+        .otp-box:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 5px rgba(79,70,229,0.1); transform: translateY(-3px); }
+        .otp-box.filled { border-color: var(--accent); background: #f0fdf4; }
+        .btn-verify {
+            width: 100%; padding: 18px; background: var(--dark);
+            color: white; border: 2px solid var(--primary); border-radius: 18px;
+            font-size: 17px; font-weight: 800; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center;
+            justify-content: center; gap: 8px; margin-bottom: 12px;
+        }
+        .btn-verify:hover { background: var(--primary); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(79,70,229,0.3); }
+        .btn-verify:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-resend {
+            width: 100%; padding: 14px; background: transparent;
+            color: var(--dark); border: 2px solid #e2e8f0; border-radius: 18px;
+            font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-resend:hover { border-color: var(--primary); background: #f8fafc; }
+        .otp-msg { margin-top: 15px; font-size: 13px; font-weight: 600; min-height: 20px; }
+
+        /* ============================================================
+           ORIGINAL ADMIN STYLES
+           ============================================================ */
         header {
             background: linear-gradient(135deg, var(--dark), #1e293b);
             padding: 15px 20px; color: white; position: sticky; top: 0; z-index: 1000;
@@ -100,9 +160,48 @@
         .stat-box { flex: 1; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); text-align: center; }
         .stat-box h3 { margin: 0; font-size: 20px; color: var(--primary); font-weight: 800; }
         .stat-box p { margin: 5px 0 0; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+
+        .premium-check { display: flex; align-items: center; gap: 12px; padding: 16px; background: #f8fafc; border-radius: 16px; border: 1px dashed #cbd5e1; }
+        .premium-check input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--primary); cursor: pointer; }
+        .premium-check label { font-size: 14px; font-weight: 700; color: var(--dark); cursor: pointer; }
     </style>
 </head>
 <body>
+
+<!-- ============================================================ -->
+<!-- OTP VERIFICATION OVERLAY - TELEGRAM BOT INTEGRATION -->
+<!-- ============================================================ -->
+<div id="otpOverlay">
+    <div class="otp-card">
+        <div class="otp-icon-circle">
+            <i class="fas fa-shield-heart"></i>
+        </div>
+        <h2>🔐 Admin Verification</h2>
+        <p class="subtitle">A 4-digit OTP has been sent to your Telegram group.<br>Enter it below to access the admin panel.</p>
+        
+        <div class="otp-input-row">
+            <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" oninput="otpAutoFocus(this, 0)" onkeydown="otpBackspace(event, this, 0)">
+            <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" oninput="otpAutoFocus(this, 1)" onkeydown="otpBackspace(event, this, 1)">
+            <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" oninput="otpAutoFocus(this, 2)" onkeydown="otpBackspace(event, this, 2)">
+            <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" oninput="otpAutoFocus(this, 3)" onkeydown="otpBackspace(event, this, 3)">
+        </div>
+        
+        <button class="btn-verify" id="verifyBtn" onclick="verifyOTP()">
+            <i class="fas fa-lock"></i> Verify & Access
+        </button>
+        
+        <button class="btn-resend" id="resendBtn" onclick="requestNewOTP()">
+            <i class="fas fa-paper-plane"></i> Request New OTP
+        </button>
+        
+        <p class="otp-msg" id="otpMsg"></p>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ADMIN MAIN CONTENT (HIDDEN UNTIL VERIFIED) -->
+<!-- ============================================================ -->
+<div id="adminMainContent" style="display:none;">
 
 <div id="toastContainer"></div>
 
@@ -165,6 +264,11 @@
                 <div class="field">
                     <label>Current Stock Count</label>
                     <input type="number" id="stockCount" required placeholder="Total units" min="0">
+                </div>
+
+                <div class="premium-check">
+                    <input type="checkbox" id="isPremium" style="width: 24px; height: 24px;">
+                    <label for="isPremium">🏆 Mark as Premium Product</label>
                 </div>
 
                 <div class="field">
@@ -243,17 +347,244 @@
         </form>
     </div>
 </div>
-<div class="field">
-    <label style="display: flex; align-items: center; gap: 10px;">
-        <input type="checkbox" id="isPremium" style="width: 20px; height: 20px;"> 
-        Mark as Premium Product
-    </label>
-</div>
+
 <nav>
     <a href="javascript:void(0)" class="nav-link active" onclick="showTab('addPage', this)"><i>🚀</i><span>Deploy</span></a>
     <a href="javascript:void(0)" class="nav-link" onclick="showTab('listPage', this)"><i>📊</i><span>Database</span></a>
 </nav>
 
+</div><!-- END adminMainContent -->
+
+<!-- ============================================================ -->
+<!-- OTP VERIFICATION JAVASCRIPT -->
+<!-- ============================================================ -->
+<script>
+    // ============================================================
+    // TELEGRAM BOT CONFIGURATION
+    // ============================================================
+    const TELEGRAM_BOT_TOKEN = "8910407538:AAHgKCWqX1mcwmDuyze23mItDdJC2ZnPT1c";
+    const TELEGRAM_CHAT_ID = "-1003929347542";
+    
+    // ============================================================
+    // OTP STATE (Hash stored - inspect-safe)
+    // ============================================================
+    let otpHash = null;           // SHA-256 hash of the OTP (actual OTP never stored)
+    let otpExpiryTime = null;    // When OTP expires (5 minutes)
+    let isOtpRequesting = false; // Prevent multiple simultaneous requests
+    
+    // ============================================================
+    // HASH FUNCTION (SHA-256 via SubtleCrypto)
+    // ============================================================
+    async function hashOTP(otp) {
+        const msgBuffer = new TextEncoder().encode(otp + 'NEMI_ADMIN_SALT_2026_SECURE');
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    
+    // ============================================================
+    // SEND OTP TO TELEGRAM GROUP
+    // ============================================================
+    async function sendOTPToTelegram(otp) {
+        const message = `🔐 *NEMI MART ADMIN OTP*\n\n🎯 *OTP:* \`${otp}\`\n\n⏰ *Valid for:* 5 minutes\n📅 *Requested:* ${new Date().toLocaleString()}\n\n_Safeguard this OTP. Do not share._`;
+        
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        });
+        
+        const result = await response.json();
+        if (!result.ok) {
+            throw new Error(result.description || 'Failed to send OTP');
+        }
+        return result;
+    }
+    
+    // ============================================================
+    // GENERATE & SEND NEW OTP
+    // ============================================================
+    async function requestNewOTP() {
+        if (isOtpRequesting) return;
+        
+        const msgEl = document.getElementById('otpMsg');
+        const resendBtn = document.getElementById('resendBtn');
+        
+        isOtpRequesting = true;
+        resendBtn.disabled = true;
+        msgEl.innerHTML = '<span style="color:#4f46e5;">📤 Sending OTP to Telegram...</span>';
+        
+        try {
+            // Generate random 4-digit OTP
+            const otp = String(Math.floor(1000 + Math.random() * 9000));
+            
+            // Send to Telegram
+            await sendOTPToTelegram(otp);
+            
+            // Hash the OTP and store (actual OTP cleared from memory)
+            otpHash = await hashOTP(otp);
+            otpExpiryTime = Date.now() + (5 * 60 * 1000); // 5 minutes
+            
+            msgEl.innerHTML = '<span style="color:#10b981;">✅ OTP sent! Check Telegram group.</span>';
+            
+            // Clear OTP input boxes
+            document.querySelectorAll('.otp-box').forEach(box => box.value = '');
+            document.querySelector('.otp-box').focus();
+            
+        } catch (error) {
+            console.error('OTP Error:', error);
+            msgEl.innerHTML = '<span style="color:#f43f5e;">❌ Failed to send OTP. Check bot token & chat ID.</span>';
+        } finally {
+            isOtpRequesting = false;
+            resendBtn.disabled = false;
+        }
+    }
+    
+    // ============================================================
+    // VERIFY ENTERED OTP
+    // ============================================================
+    async function verifyOTP() {
+        const otpBoxes = document.querySelectorAll('.otp-box');
+        const enteredOTP = Array.from(otpBoxes).map(box => box.value).join('');
+        const msgEl = document.getElementById('otpMsg');
+        const verifyBtn = document.getElementById('verifyBtn');
+        
+        // Validate input
+        if (enteredOTP.length !== 4) {
+            msgEl.innerHTML = '<span style="color:#EAB308;">⚠️ Please enter complete 4-digit OTP</span>';
+            return;
+        }
+        
+        // Check if OTP was requested
+        if (!otpHash) {
+            msgEl.innerHTML = '<span style="color:#EAB308;">⚠️ Request OTP first</span>';
+            return;
+        }
+        
+        // Check expiry (5 minutes)
+        if (Date.now() > otpExpiryTime) {
+            msgEl.innerHTML = '<span style="color:#f43f5e;">⏰ OTP expired. Request a new one.</span>';
+            otpHash = null;
+            otpExpiryTime = null;
+            otpBoxes.forEach(box => box.value = '');
+            return;
+        }
+        
+        // Verify
+        verifyBtn.disabled = true;
+        verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+        
+        try {
+            const enteredHash = await hashOTP(enteredOTP);
+            
+            if (enteredHash === otpHash) {
+                // ✅ SUCCESS
+                msgEl.innerHTML = '<span style="color:#10b981;">✅ Access Granted! Loading admin panel...</span>';
+                
+                // Store session flag
+                sessionStorage.setItem('nemi_admin_verified', 'true');
+                sessionStorage.setItem('nemi_admin_verified_at', Date.now().toString());
+                
+                // Hide overlay and show admin content
+                setTimeout(() => {
+                    document.getElementById('otpOverlay').style.display = 'none';
+                    document.getElementById('adminMainContent').style.display = 'block';
+                }, 500);
+                
+            } else {
+                // ❌ INVALID
+                msgEl.innerHTML = '<span style="color:#f43f5e;">❌ Invalid OTP. Try again.</span>';
+                otpBoxes.forEach(box => box.value = '');
+                document.querySelector('.otp-box').focus();
+            }
+        } catch (error) {
+            msgEl.innerHTML = '<span style="color:#f43f5e;">❌ Verification error. Try again.</span>';
+        } finally {
+            verifyBtn.disabled = false;
+            verifyBtn.innerHTML = '<i class="fas fa-lock"></i> Verify & Access';
+        }
+    }
+    
+    // ============================================================
+    // OTP INPUT HANDLERS
+    // ============================================================
+    function otpAutoFocus(input, index) {
+        input.value = input.value.replace(/[^0-9]/g, '');
+        if (input.value.length === 1) {
+            input.classList.add('filled');
+            const nextBox = document.querySelectorAll('.otp-box')[index + 1];
+            if (nextBox) nextBox.focus();
+        } else {
+            input.classList.remove('filled');
+        }
+    }
+    
+    function otpBackspace(event, input, index) {
+        if (event.key === 'Backspace' && !input.value && index > 0) {
+            const prevBox = document.querySelectorAll('.otp-box')[index - 1];
+            if (prevBox) { prevBox.value = ''; prevBox.classList.remove('filled'); prevBox.focus(); }
+        }
+    }
+    
+    // ============================================================
+    // PASTE OTP SUPPORT
+    // ============================================================
+    document.addEventListener('paste', function(e) {
+        const activeEl = document.activeElement;
+        if (activeEl && activeEl.closest('#otpOverlay')) {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window.clipboardData).getData('text');
+            const digits = pasted.replace(/[^0-9]/g, '').slice(0, 4);
+            if (digits.length === 4) {
+                const boxes = document.querySelectorAll('.otp-box');
+                digits.split('').forEach((d, i) => { boxes[i].value = d; boxes[i].classList.add('filled'); });
+                boxes[3].focus();
+            }
+        }
+    });
+    
+    // ============================================================
+    // CHECK EXISTING SESSION ON LOAD
+    // ============================================================
+    (function checkSession() {
+        const verified = sessionStorage.getItem('nemi_admin_verified');
+        const verifiedAt = parseInt(sessionStorage.getItem('nemi_admin_verified_at') || '0');
+        const sessionDuration = 30 * 60 * 1000; // 30 minutes session
+        
+        if (verified === 'true' && (Date.now() - verifiedAt) < sessionDuration) {
+            // Already verified in this session
+            document.getElementById('otpOverlay').style.display = 'none';
+            document.getElementById('adminMainContent').style.display = 'block';
+        } else {
+            // Need OTP - auto request
+            sessionStorage.removeItem('nemi_admin_verified');
+            document.getElementById('adminMainContent').style.display = 'none';
+            document.getElementById('otpOverlay').style.display = 'flex';
+            
+            // Auto-request OTP on load
+            setTimeout(() => {
+                requestNewOTP();
+                document.querySelector('.otp-box').focus();
+            }, 500);
+        }
+    })();
+    
+    // Expose functions globally
+    window.requestNewOTP = requestNewOTP;
+    window.verifyOTP = verifyOTP;
+    window.otpAutoFocus = otpAutoFocus;
+    window.otpBackspace = otpBackspace;
+</script>
+
+<!-- ============================================================ -->
+<!-- ORIGINAL ADMIN PANEL JAVASCRIPT -->
+<!-- ============================================================ -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -261,7 +592,6 @@
     const CLOUD_NAME = "despxo7zb";
     const UPLOAD_PRESET = "nemi_preset"; 
     
-    // Yahan Config bilkul stable hai
     const firebaseConfig = { 
         databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com" 
     };
@@ -312,7 +642,6 @@
         let uploadedUrls = [];
 
         try {
-            // Cloudinary Upload Loop
             for(let i=0; i < fileInputs.length; i++) {
                 let file = fileInputs[i].files[0];
                 if(file) {
@@ -341,8 +670,8 @@
             const d = parseFloat(document.getElementById('disc').value);
             const final = Math.round(p - (p * (d/100)));
             const pTitle = document.getElementById('title').value;
+            const isPremium = document.getElementById('isPremium').checked;
 
-            // Product Data Object
             const prodData = {
                 title: pTitle,
                 category: document.getElementById('category').value,
@@ -354,14 +683,13 @@
                 description: document.getElementById('desc').value,
                 usage: document.getElementById('usage').value,
                 ingredients: document.getElementById('ing').value,
+                isPremium: isPremium,
                 time: Date.now()
             };
 
-            // 1. Push Product
             const newProRef = push(ref(db, 'products'));
             await set(newProRef, prodData);
 
-            // 2. Push Notification (Sahi Path)
             const newNotifRef = push(ref(db, 'notifications'));
             await set(newNotifRef, {
                 title: "New Product Available!",
@@ -373,6 +701,7 @@
             showToast("Product & Notification Live!");
             document.getElementById('proForm').reset();
             document.getElementById('photoList').innerHTML = `<div class="photo-row"><input type="file" class="photo-input" accept="image/*" required></div>`;
+            document.getElementById('isPremium').checked = false;
             showTab('listPage', document.querySelectorAll('.nav-link')[1]);
 
         } catch (err) {
@@ -382,12 +711,11 @@
         }
     });
 
-    // Feed Rendering
     window.renderFeed = (dataObj) => {
         const feed = document.getElementById('masterFeed');
         feed.innerHTML = "";
         const keys = Object.keys(dataObj).reverse();
-        isPremium: document.getElementById('isPremium').checked,
+        
         document.getElementById('totalProducts').innerText = keys.length;
         document.getElementById('activeProducts').innerText = keys.filter(k => dataObj[k].stock > 0).length;
 
@@ -409,7 +737,7 @@
                             <span style="font-size:9px; color:var(--primary); font-weight:800">${p.category}</span>
                             <button class="btn-icon edit" onclick="openEdit('${id}')">EDIT</button>
                         </div>
-                        <h4>${p.title}</h4>
+                        <h4>${p.title} ${p.isPremium ? '🏆' : ''}</h4>
                         <div style="margin: 5px 0;">
                             <b style="font-size:16px;">₹${p.finalPrice}</b> 
                             <span style="text-decoration:line-through; font-size:12px; color:#94a3b8; margin-left:5px;">₹${p.price}</span>
@@ -479,6 +807,7 @@
         });
     });
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 </html>
- 
